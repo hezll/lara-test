@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 use Database\Factories\ContactFactory;
+use Laravel\Scout\Searchable;
 
 class Contact extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Searchable;
     /**
      * The factory for the model.
      */
@@ -33,6 +34,15 @@ class Contact extends Model
         'source',
         'last_contacted_at',
     ];
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+        ];
+    }
 
     protected $casts = [
         'status' => ContactStatus::class,
