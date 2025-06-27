@@ -12,6 +12,7 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function () {
     Route::prefix('contacts')->group(function () {
+        Route::get('/', [ContactController::class, 'index']); 
         Route::post('/', [ContactController::class, 'store']);
         Route::get('/{id}', [ContactController::class, 'show']);
         Route::delete('/{id}', [ContactController::class, 'destroy']);

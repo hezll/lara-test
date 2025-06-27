@@ -2,5 +2,5 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    App\Providers\ContactServiceProvider::class,
+    App\Domain\Contact\Providers\ContactServiceProvider::class,
 ];

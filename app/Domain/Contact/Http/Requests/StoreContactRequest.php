@@ -4,7 +4,7 @@ namespace App\Domain\Contact\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContactRequest extends FormRequest
+class StoreContactRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,10 @@ class ContactRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'uuid' => ['nullable', 'uuid'],
+            'name' => ['required', 'string'],
+            'phone' => ['required', 'regex:/^\+64\d{8,10}$/', 'unique:contacts,phone'],
+            'email' => ['required', 'email', 'unique:contacts,email'],
         ];
     }
 }
