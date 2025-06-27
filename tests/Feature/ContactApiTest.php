@@ -44,7 +44,7 @@ it('can create a new contact', function () {
 
 it('can search contacts by name, email or phone', function () {
     // Matching contact
-    Contact::factory()->create([
+   Contact::factory()->create([
         'name' => 'Alice Wonderland',
         'email' => 'alice@wonderland.com',
         'phone' => '+61411111111',
@@ -56,16 +56,18 @@ it('can search contacts by name, email or phone', function () {
         'email' => 'bob@example.com',
         'phone' => '+61499999999',
     ]);
-    Contact::makeAllSearchable();
-    get('/api/v1/contacts?q=alice')
+
+    sleep(0.5); // Ensure search index is updated
+
+    get('/api/v1/contacts?q=Alice')
     ->assertOk()
     ->assertJson(fn (AssertableJson $json) =>
         $json->has('data', 1)
-             ->has('data.0')
-             ->where('data.0.name', 'Alice Wonderland')
              ->has('meta')
              ->has('links')
-             ->etc() // Allows additional fields
+             ->where('data.0.name', 'Alice Wonderland')
+             ->where('data.0.email', 'alice@wonderland.com')
+       
     );
 
 });

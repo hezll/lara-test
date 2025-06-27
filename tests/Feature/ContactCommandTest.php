@@ -6,16 +6,17 @@ use Illuminate\Testing\PendingCommand;
 use App\Domain\Contact\Models\Contact;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(TestCase::class, RefreshDatabase::class);
+uses(Tests\TestCase::class, Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 // Test contact:create CLI
 it('can create a contact via CLI', function () {
-    $exitCode = $this->artisan('contact:upsert', [
+    $this->artisan('contact:upsert', [
         '--name' => 'Alice CLI',
         '--email' => 'alice.cli@example.com',
         '--phone' => '+61411112222',
-    ])->expectsOutputToContain('Contact upserted: ID')
-      ->assertExitCode(0);
+    ])
+        ->expectsOutputToContain('Contact upserted: ID')
+        ->assertExitCode(0);
 
     $this->assertDatabaseHas('contacts', [
         'email' => 'alice.cli@example.com',
@@ -23,6 +24,7 @@ it('can create a contact via CLI', function () {
         'phone' => '+61411112222',
     ]);
 });
+
 
 // Test contact:list CLI
 it('can list contacts via CLI', function () {
