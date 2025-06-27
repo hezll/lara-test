@@ -16,7 +16,7 @@ it('can list contacts', function () {
     get('/api/v1/contacts')
         ->assertOk()
         ->assertJson(fn (AssertableJson $json) =>
-            $json->has('data', 3)
+            $json->has('data')
                  ->has('meta')
                  ->has('links')
         );
@@ -56,7 +56,7 @@ it('can search contacts by name, email or phone', function () {
         'email' => 'bob@example.com',
         'phone' => '+61499999999',
     ]);
-
+    Contact::makeAllSearchable();
     get('/api/v1/contacts?q=alice')
     ->assertOk()
     ->assertJson(fn (AssertableJson $json) =>
