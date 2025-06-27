@@ -16,8 +16,6 @@ interface ContactServiceInterface
 
     public function delete(int|string $id): void;
 
-    public function search(array $filters): Collection;
-
     public function call(int|string $id): Contact;
 
     public function list(ContactListData $dto): LengthAwarePaginator;

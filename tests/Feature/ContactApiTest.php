@@ -42,49 +42,30 @@ it('can create a new contact', function () {
         ->assertJsonPath('data.name', 'Alice Test');
 });
 
-// it('can search contacts', function () {
-//     Contact::factory()->create(['name' => 'John Smith']);
-//     Contact::factory()->create(['name' => 'Jane Doe']);
+it('can search contacts by name, email or phone', function () {
+    // Matching contact
+    Contact::factory()->create([
+        'name' => 'Alice Wonderland',
+        'email' => 'alice@wonderland.com',
+        'phone' => '+61411111111',
+    ]);
 
-//     get('/api/v1/contacts/search?q=john')
-//         ->assertOk()
-//         ->assertJson(fn (AssertableJson $json) =>
-//             $json->has('data', 1)
-//                  ->where('data.0.name', 'John Smith')
-//         );
-// });
+    // Non-matching contact
+    Contact::factory()->create([
+        'name' => 'Bob Smith',
+        'email' => 'bob@example.com',
+        'phone' => '+61499999999',
+    ]);
 
-// it('can mark contact as called', function () {
-//     $contact = Contact::factory()->create(['is_called' => false]);
+    get('/api/v1/contacts?q=alice')
+    ->assertOk()
+    ->assertJson(fn (AssertableJson $json) =>
+        $json->has('data', 1)
+             ->has('data.0')
+             ->where('data.0.name', 'Alice Wonderland')
+             ->has('meta')
+             ->has('links')
+             ->etc() // Allows additional fields
+    );
 
-//     post("/api/v1/contacts/{$contact->id}/call")
-//         ->assertOk()
-//         ->assertJsonPath('data.is_called', true);
-// });
-
-// it('can update existing contact (upsert)', function () {
-//     $contact = Contact::factory()->create();
-
-//     $data = [
-//         'id' => $contact->id,
-//         'name' => 'Updated Name',
-//         'email' => 'updated@example.com',
-//         'phone' => $contact->phone,
-//     ];
-
-//     post('/api/v1/contacts', $data)
-//         ->assertOk()
-//         ->assertJsonPath('data.name', 'Updated Name');
-// });
-
-// it('can delete contact', function () {
-//     $contact = Contact::factory()->create();
-
-//     delete("/api/v1/contacts/{$contact->id}")
-//         ->assertNoContent();
-
-//     $this->assertDatabaseMissing('contacts', ['id' => $contact->id]);
-// });
-
-
-
+});
