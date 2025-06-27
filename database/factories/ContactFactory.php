@@ -19,18 +19,18 @@ class ContactFactory extends Factory
         return [
             'uuid' => Str::uuid(),
 
-            'name' => $this->faker->name(),
-            'phone' => $this->faker->unique()->numerify('+614########'), // AU E.164
-            'email' => $this->faker->unique()->safeEmail(),
+            'name' =>  fake()->name(),
+            'phone' =>  fake()->unique()->numerify('+614########'), // AU E.164
+            'email' =>  fake()->unique()->safeEmail(),
 
-            'status' => $this->faker->randomElement(ContactStatus::cases()),
-            'is_called' => $this->faker->boolean(30),
-            'is_active' => $this->faker->boolean(90),
+            'status' => fake()->randomElement(ContactStatus::cases()),
+            'is_called' =>  fake()->boolean(30),
+            'is_active' =>  fake()->boolean(90),
 
-            'notes' => $this->faker->optional()->sentence(),
+            'notes' =>  fake()->optional()->sentence(),
             'tags' => ['seeded', 'test'],
-            'source' => $this->faker->randomElement(['import', 'manual', 'api']),
-            'last_contacted_at' => $this->faker->optional()->dateTimeBetween('-1 month', 'now'),
+            'source' =>  fake()->randomElement(['import', 'manual', 'api']),
+            'last_contacted_at' =>  fake()->optional()->dateTimeBetween('-1 month', 'now'),
 
             'created_at' => now(),
             'updated_at' => now(),

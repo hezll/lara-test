@@ -34,12 +34,6 @@ class ContactController extends Controller
         return response()->json(['message' => 'Contact deleted']);
     }
 
-    public function search(Request $request)
-    {
-        $results = $this->contactService->search($request->only(['name', 'phone', 'email_domain']));
-        return ContactResource::collection($results);
-    }
-
     public function call($id)
     {
         return new ContactResource($this->contactService->call($id));

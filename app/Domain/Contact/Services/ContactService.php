@@ -36,25 +36,7 @@ class ContactService implements ContactServiceInterface
         $this->findById($id)->delete();
     }
 
-    public function search(array $filters): Collection
-    {
-        $query = Contact::query();
-
-        if (!empty($filters['name'])) {
-            $query->where('name', 'like', '%' . $filters['name'] . '%');
-        }
-
-        if (!empty($filters['phone'])) {
-            $query->where('phone', 'like', '%' . $filters['phone'] . '%');
-        }
-
-        if (!empty($filters['email_domain'])) {
-            $query->where('email', 'like', '%' . '@' . $filters['email_domain']);
-        }
-
-        return $query->get();
-    }
-
+  
     public function call(int|string $id): Contact
     {
         $contact = $this->findById($id);
@@ -65,10 +47,35 @@ class ContactService implements ContactServiceInterface
         return $contact;
     }
 
+    /**
+     * Search and filter contacts using Meilisearch (via Laravel Scout).
+     *
+     * @param  ContactListData  $dto
+     * @return LengthAwarePaginator
+     */
     public function list(ContactListData $dto): LengthAwarePaginator
     {
-        return Contact::query()
-            ->orderByDesc('created_at')
-            ->paginate(perPage: $dto->perPage, page: $dto->page);
+        // Full-text search by name, phone, or email
+        $query = Contact::search($dto->q ?? '');
+
+        // Optional filters (Meilisearch filterable attributes must be configured)
+        if ($dto->tag) {
+            $query->where('tags', $dto->tag);
+        }
+
+        if ($dto->createdAfter) {
+            $query->where('created_at', '>=', $dto->createdAfter);
+        }
+
+        // Optional sorting (sortable attributes must be configured in Meilisearch)
+        if ($dto->sort) {
+            $query->orderBy($dto->sort, $dto->direction ?? 'asc');
+        }
+
+        // Paginate results
+        return $query->paginate(
+            perPage: $dto->perPage ?? 15,
+            page: $dto->page ?? 1
+        );
     }
 }
