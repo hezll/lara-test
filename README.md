@@ -94,7 +94,7 @@ php artisan db:seed
 | POST   | `/contacts/{id}/call` | Mark contact as called    |
 | GET    | `/contacts?q=keyword` | Search contacts           |
 
-###  Example (Create Contact)
+###  Example 
 
 ```bash
 ccurl -X POST https://lara-test.test/api/v1/contacts \
@@ -229,9 +229,11 @@ php artisan scout:import App\\Domain\\Contact\\Models\\Contact
 5. Search via API:
 
 ```bash
-curl -G http://lara-test.test/api/v1/contacts \
+curl -L -G https://lara-test.test/api/v1/contacts/ \
   --data-urlencode "q=alice" \
   -H "Accept: application/json"
+
+{"data":[{"id":21,"uuid":"53e6f7f3-4e78-40ea-8fd5-6528fee572c1","name":"Alice Test","phone":"+61412345678","email":"alice@example.com","status":0,"is_called":false,"is_active":true,"notes":"First time create","tags":["new","important"],"source":"linkedin","last_contacted_at":null,"created_at":"2025-06-27T03:11:02.000000Z","updated_at":"2025-06-27T03:11:02.000000Z"},{"id":23,"uuid":"5cedc1d1-6b6e-4f24-b111-7be6ae0378d7","name":"Alice Test","phone":"+61512345678","email":"a123lice@example.com","status":0,"is_called":false,"is_active":true,"notes":"First time create","tags":["new","important"],"source":"linkedin","last_contacted_at":null,"created_at":"2025-06-27T04:12:22.000000Z","updated_at":"2025-06-27T04:12:22.000000Z"},{"id":26,"uuid":"81301907-9166-4bd6-aa29-a69a4e992823","name":"Alice CLI","phone":"+61400000001","email":"cli@example.com","status":0,"is_called":false,"is_active":true,"notes":null,"tags":[],"source":"cli","last_contacted_at":null,"created_at":"2025-06-27T06:58:21.000000Z","updated_at":"2025-06-27T06:58:21.000000Z"},{"id":30,"uuid":"6cda8a89-7fac-4adc-b0f8-b132419fe99b","name":"Alice First","phone":"+61412315678","email":"alic123e.first@example.com","status":0,"is_called":false,"is_active":true,"notes":null,"tags":[],"source":null,"last_contacted_at":null,"created_at":"2025-06-27T07:30:43.000000Z",...
 ```
 
 ---
