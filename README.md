@@ -38,13 +38,13 @@ app/
 │       │   ├── Controllers/
 │       │   │   └── V1/
 │       │   │       └── ContactController.php
-│       │   └── Resources/
-│       │       └── ContactResource.php
+│       │   ├── Resources/
+│       │   │   └── ContactResource.php
+│       │   ├── Requests/
+│       │   └── ContactStoreRequest.php
 │       ├── Models/
 │       │   └── Contact.php
-│       ├── Requests/
-│       │   ├── ContactStoreRequest.php
-│       │   └── ContactSearchRequest.php
+│       │   
 │       ├── Services/
 │       │   └── ContactService.php
 │       └── Contracts/
@@ -56,8 +56,8 @@ routes/
 tests/
 ├── Feature/
 │   ├── ContactApiTest.php
-│   └── Console/
-│       └── ContactCommandTest.php
+│   └── ContactCommandTest.php
+│       
 
 ````
 
@@ -191,7 +191,7 @@ This project integrates [Laravel Scout](https://laravel.com/docs/scout) to suppo
 * `email`
 * `phone`
 
-### 🛠 Default Driver: `Meilisearch`
+### Default Driver: `Meilisearch`
 
 To switch to **Meilisearch**:
 
@@ -245,7 +245,29 @@ This project uses [Pest PHP](https://pestphp.com/) for testing.
 Run all tests:
 
 ```bash
-./vendor/bin/pest
+php artisan test
+
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true
+
+   PASS  Tests\Feature\ContactApiTest
+  ✓ it can list contacts                                                                                             0.13s  
+  ✓ it can show a contact                                                                                            0.01s  
+  ✓ it can create a new contact                                                                                      0.02s  
+  ✓ it can search contacts by name, email or phone                                                                   0.01s  
+
+   PASS  Tests\Feature\ContactCommandTest
+  ✓ it can create a contact via CLI                                                                                  0.01s  
+  ✓ it can list contacts via CLI                                                                                     0.02s  
+  ✓ it can mark a contact as called via CLI                                                                          0.01s  
+
+   PASS  Tests\Feature\ExampleTest
+  ✓ the application returns a successful response                                                                    0.01s  
+
+  Tests:    9 passed (31 assertions)
+  Duration: 0.28s
+
+It may has small issue since the index taks 
 ```
 
 Or run a specific test file:
