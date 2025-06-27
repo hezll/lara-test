@@ -36,7 +36,7 @@ class ContactController extends Controller
 
     public function search(Request $request)
     {
-        $results = $this->contactService->search($request->only(['name', 'phone', 'email_domain']));
+        $results = $this->contactService->search($request->only(['name', 'phone', 'email']));
         return ContactResource::collection($results);
     }
 
