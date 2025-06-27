@@ -16,7 +16,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/', [ContactController::class, 'store']);
         Route::get('/{id}', [ContactController::class, 'show']);
         Route::delete('/{id}', [ContactController::class, 'destroy']);
-        Route::get('/search', [ContactController::class, 'search']);
         Route::post('/{id}/call', [ContactController::class, 'call']);
     });
 
