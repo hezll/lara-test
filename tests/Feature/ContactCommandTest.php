@@ -67,3 +67,39 @@ it('can mark a contact as called via CLI', function () {
     $contact->refresh();
     expect($contact->is_called)->toBeTrue();
 });
+
+it('fails to create contact via CLI when name is missing', function () {
+    $this->artisan('contact:upsert', [
+        '--email' => 'cli-missing-name@example.com',
+        '--phone' => '+61499999999',
+    ])
+    ->expectsOutputToContain('The name field is required.')
+    ->assertExitCode(1);
+});
+
+it('fails to create contact via CLI when phone already exists', function () {
+    Contact::factory()->create([
+        'name' => 'Alice Existing',
+        'email' => 'alice.existing@example.com',
+        'phone' => '+61412345678',
+    ]);
+
+    $this->artisan('contact:upsert', [
+        '--name' => 'Alice Dup',
+        '--email' => 'alice.dup@example.com',
+        '--phone' => '+61412345678',
+    ])
+    ->expectsOutputToContain('The phone has already been taken.')
+    ->assertExitCode(1);
+});
+
+
+it('can safely re-call an already called contact', function () {
+    $contact = Contact::factory()->create(['is_called' => true]);
+
+    $this->artisan('contact:call', [
+        'id' => $contact->id,
+    ])
+    ->expectsOutput("Contact ID {$contact->id} marked as called.") // 或提示已处理
+    ->assertExitCode(0);
+});

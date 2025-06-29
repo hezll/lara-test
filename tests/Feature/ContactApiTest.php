@@ -42,6 +42,34 @@ it('can create a new contact', function () {
         ->assertJsonPath('data.name', 'Alice Test');
 });
 
+it('returns validation error when phone number is duplicated', function () {
+    // Create existing contact
+    Contact::factory()->create([
+        'name'  => 'Bob',
+        'email' => 'bob@example.com',
+        'phone' => '+61400000000',
+    ]);
+
+    // Attempt to create another contact with same phone
+    $data = [
+        'name'  => 'Another Bob',
+        'email' => 'anotherbob@example.com',  // different
+        'phone' => '+61400000000',            // same as above
+    ];
+
+    post('/api/v1/contacts', $data)
+        ->assertUnprocessable()
+        ->assertJson(fn (AssertableJson $json) =>
+            $json->where('success', false)
+                 ->where('code', 'VALIDATION_ERROR')
+                 ->where('message', 'Validation failed.')
+                 ->has('errors.phone')
+                 ->where('errors.phone.0', 'The phone has already been taken.')
+        );
+});
+
+
+
 it('can search contacts by name, email or phone', function () {
     // Matching contact
    Contact::factory()->create([
@@ -57,7 +85,7 @@ it('can search contacts by name, email or phone', function () {
         'phone' => '+61499999999',
     ]);
 
-    sleep(0.5); // Ensure search index is updated
+    sleep(1); // Ensure search index is updated
 
     get('/api/v1/contacts?q=Alice')
     ->assertOk()

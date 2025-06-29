@@ -17,7 +17,7 @@ class ContactController extends Controller
     ) {}
 
     public function store(StoreContactRequest $request)
-    {
+    {  
         $dto = ContactData::fromArray($request->validated());
         $contact = $this->contactService->upsert($dto);
         return new ContactResource($contact);

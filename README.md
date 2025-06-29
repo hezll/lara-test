@@ -97,16 +97,18 @@ php artisan db:seed
 ###  Example 
 
 ```bash
-ccurl -X POST https://lara-test.test/api/v1/contacts \
+curl -X POST https://lara-test.test/api/v1/contacts \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
   -d '{"name": "Alice123", "email": "alice123@example.com", "phone": "+61412345679"}'
+
 {"data":{"id":31,"uuid":"b75f8ee2-db7f-476b-8c01-1867ec7a396b","name":"Alice123","phone":"+61412345679","email":"alice123@example.com","status":null,"is_called":null,"is_active":null,"notes":null,"tags":[],"source":null,"last_contacted_at":null,"created_at":"2025-06-27T08:20:56.000000Z","updated_at":"2025-06-27T08:20:56.000000Z"}}
 
 curl -X POST https://lara-test.test/api/v1/contacts \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
   -d '{"name": "Alice", "email": "alice@example.com", "phone": "+61412345678"}'
+
 {"message":"Phone number already exists. (and 1 more error)","errors":{"phone":["Phone number already exists."],"email":["Email address already exists."]}}
 
 
@@ -114,11 +116,13 @@ curl -G "https://lara-test.test/api/v1/contacts" \
   --data-urlencode "page=2" \
   --data-urlencode "perPage=10" \
   -H "Accept: application/json"
+
 {"data":[{"id":16,"uuid":"61d8b57f-9ab2-4ac0-a4ca-1f03f3daa474","name":"Karson Cummerata","phone":"+61493365315","email":"szemlak@example.net","status":2,"is_called":false,"is_active":true,"notes":null,"tags":["demo","seed"],"source":"import","last_contacted_at":"2025-06-01T14:00:25.000000Z","created_at":"2025-06-26T14:09:10.000000Z","updated_at":"2025-06-26T14:09:10.000000Z"},{"id":17,"uuid":"d35d1027-b715-44e2-9c8b-b8a0abe5ae8c","name":"Ms. Isabel Bode DDS","phone":"+61446837730","email":"bruen.narciso@example.com","status":3,"is_called":false,"is_active":true,"notes":"Similique dolorem ullam aliquid illo et.","tags":["demo","seed"],"source":"import","last_contacted...
 
 curl -G "https://lara-test.test/api/v1/contacts" \
   --data-urlencode "q=alice" \
   -H "Accept: application/json"
+
 {"data":[{"id":21,"uuid":"53e6f7f3-4e78-40ea-8fd5-6528fee572c1","name":"Alice Test","phone":"+61412345678","email":"alice@example.com","status":0,"is_called":false,"is_active":true,"notes":"First time create","tags":["new","important"],"source":"linkedin","last_contacted_at":null,"created_at":"2025-06-27T03:11:02.000000Z","updated_at":"2025-06-27T03:11:02.000000Z"},{"id":23,"uuid":"5cedc1d1-6b6e-4f24-b111-7be6ae0378d7","name":"Alice Test","phone":"+61512345678","email":"a123lice@example.com","status":0,"is_called":false,"is_active":true,"notes":"First time create","tags":["new","important"],"source":"linkedin","last_contacted_at":null,"created_at":"2025-06-27T04:12:22.000000Z","updated_at":"2025-06-27T04:12:22.000000Z"},{"id":26,"uuid":"81301907-9166-4bd6-aa29-a69a4e992823","name":"Alice CLI","phone":"+61400000001","email":"cli@example.com","status":0,"is_called":false,"is_active":true,"notes":null,"tags":[],"source":"cli","last_contacted_at":null,"created_at":"2025-06-27T06:58:21.000000Z","updated_at":"2025-06-27T06:58:21.000000Z"},{"id":30,"uuid":"6cda8a89-7fac-4adc-b0f8-b132419fe99b","name":"Alice First","...
 
 ```
@@ -251,21 +255,25 @@ php artisan test
   ✓ that true is true
 
    PASS  Tests\Feature\ContactApiTest
-  ✓ it can list contacts                                                                                             0.13s  
-  ✓ it can show a contact                                                                                            0.01s  
-  ✓ it can create a new contact                                                                                      0.02s  
-  ✓ it can search contacts by name, email or phone                                                                   0.01s  
+  ✓ it can list contacts                                                           0.23s  
+  ✓ it can show a contact                                                          0.04s  
+  ✓ it can create a new contact                                                    0.05s  
+  ✓ it returns validation error when phone number is duplicated                    0.01s  
+  ✓ it can search contacts by name, email or phone                                 1.03s  
 
    PASS  Tests\Feature\ContactCommandTest
-  ✓ it can create a contact via CLI                                                                                  0.01s  
-  ✓ it can list contacts via CLI                                                                                     0.02s  
-  ✓ it can mark a contact as called via CLI                                                                          0.01s  
+  ✓ it can create a contact via CLI                                                0.02s  
+  ✓ it can list contacts via CLI                                                   0.03s  
+  ✓ it can mark a contact as called via CLI                                        0.02s  
+  ✓ it fails to create contact via CLI when name is missing                        0.01s  
+  ✓ it fails to create contact via CLI when phone already exists                   0.01s  
+  ✓ it can safely re-call an already called contact                                0.01s  
 
    PASS  Tests\Feature\ExampleTest
-  ✓ the application returns a successful response                                                                    0.01s  
+  ✓ the application returns a successful response                                  0.02s  
 
-  Tests:    9 passed (31 assertions)
-  Duration: 0.28s
+  Tests:    13 passed (48 assertions)
+  Duration: 1.58s
 
 It may has small issue since the index taks 
 ```

@@ -4,6 +4,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Domain\Contact\Http\Controllers\V1\ContactController;
+use Illuminate\Validation\ValidationException; 
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
+use App\Http\Requests\TestRequest;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -21,3 +27,5 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/ping', fn () => response()->json(['pong' => true]));
 });
+
+
