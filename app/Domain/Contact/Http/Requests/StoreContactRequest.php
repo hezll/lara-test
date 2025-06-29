@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use App\Domain\Contact\Models\Contact;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+
 /**
  * Class StoreContactRequest
  *
@@ -30,31 +32,18 @@ class StoreContactRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'  => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email'],
-            'phone' => [
-                'required',
-                'regex:/^\+61\d{9}$|^\+64\d{8,9}$/'
-            ],
-            'notes'  => ['nullable', 'string'],
-            'tags'   => ['nullable', 'array'],
-            'tags.*' => ['string'],
-            'source' => ['nullable', 'string', 'max:255'],
+        'name'  => ['required', 'string', 'max:255'],
+        'email' => ['required', 'email', Rule::unique('contacts', 'email')],
+        'phone' => [
+            'required',
+            'regex:/^\+61\d{9}$|^\+64\d{8,9}$/',
+            Rule::unique('contacts', 'phone'),
+        ],
+        'notes'  => ['nullable', 'string'],
+        'tags'   => ['nullable', 'array'],
+        'tags.*' => ['string'],
+        'source' => ['nullable', 'string', 'max:255'],
         ];
     }
 
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(function ($validator) {
-            // Check duplicate phone
-            if (Contact::where('phone', $this->phone)->exists()) {
-                $validator->errors()->add('phone', 'Phone number already exists.');
-            }
-
-            // Check duplicate email
-            if (Contact::where('email', $this->email)->exists()) {
-                $validator->errors()->add('email', 'Email address already exists.');
-            }
-        });
-    }
 }
